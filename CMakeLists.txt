@@ -4,10 +4,10 @@ if (NOT PICO_PROGRAM_MAIN_ENTRY)
 	# Some boards, such as the first Adafruit revisions, may have trouble booting properly
 	# due to bad componets used in the design.
 	# Turn this setting to ON if your rp2040 is not detected after firmware upload and reset
-	set(BOOT_WORKAROUND OFF)
+	set(BOOT_WORKAROUND ON)
 
 	# Default output data pin for the non-SPI LED strips (only for sk6812/ws2812b)
-	set(OUTPUT_DATA_PIN 2)
+	set(OUTPUT_DATA_PIN 27)
 
 	# Default output data/clocks pin for the SPI LED strips (only for apa102, not for sk6812/ws2812b)
 	# only certain pairs of pins are allowed for selected SPI interface (refer to "readme.md")
@@ -16,7 +16,7 @@ if (NOT PICO_PROGRAM_MAIN_ENTRY)
 	set(OUTPUT_SPI_INTERFACE spi0)
 
 	# Use multi-segment, starting index of second led strip or OFF to disable
-	set(SECOND_SEGMENT_INDEX 171)
+	set(SECOND_SEGMENT_INDEX 143)
 
 	# If multi-segment is used and it's reversed, set this option to ON to enable reversing
 	set(SECOND_SEGMENT_REVERSED ON)
@@ -62,7 +62,7 @@ if(NOT CMAKE_HOST_WIN32)
 	string(ASCII 27 EscChar)
 	set(ColorReset  "${EscChar}[m")
 	set(GreenColor  "${EscChar}[32m")
-	set(YellowColor "${EscChar}[33m")
+	set(YellowColor "${EscChar}[33m")	
 endif()
 
 if (OVERRIDE_DATA_PIN)
@@ -129,8 +129,6 @@ IF(NOT SECOND_SEGMENT_INDEX)
     IF(NOT DISABLE_SPI_LEDS)
         HyperSerialPicoTarget("${CMAKE_PROJECT_NAME}_Spi")
         target_compile_definitions("${CMAKE_PROJECT_NAME}_Spi" PRIVATE -DSPILED_APA102 -DSPI_INTERFACE=${OUTPUT_SPI_INTERFACE} -DDATA_PIN=${OUTPUT_SPI_DATA_PIN} -DCLOCK_PIN=${OUTPUT_SPI_CLOCK_PIN})
-        HyperSerialPicoTarget("${CMAKE_PROJECT_NAME}_ws2801")
-        target_compile_definitions("${CMAKE_PROJECT_NAME}_ws2801" PRIVATE -DSPILED_WS2801 -DSPI_INTERFACE=${OUTPUT_SPI_INTERFACE} -DDATA_PIN=${OUTPUT_SPI_DATA_PIN} -DCLOCK_PIN=${OUTPUT_SPI_CLOCK_PIN})
     endif()
     HyperSerialPicoTarget("${CMAKE_PROJECT_NAME}_sk6812Cold")
     target_compile_definitions("${CMAKE_PROJECT_NAME}_sk6812Cold" PRIVATE -DNEOPIXEL_RGBW -DCOLD_WHITE -DDATA_PIN=${OUTPUT_DATA_PIN})
